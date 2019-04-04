@@ -1,5 +1,5 @@
 {
-    "name": "savvot/random",
+    "name": "http5/random",
     "description": "Deterministic pseudo-random generators library with dozens of useful functions and several sources of randomness",
     "keywords": [
         "random number generator",
@@ -25,19 +25,20 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
-        "php-64bit": ">=5.5.0"
+        "php": ">=7.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": ">=7.0",
+        "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {
-            "Savvot\\Random\\": "src/"
+            "Http5\\Random\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Savvot\\Random\\Tests\\": "tests/"
+            "Http5\\Random\\Tests\\": "tests/"
         }
     }
 }

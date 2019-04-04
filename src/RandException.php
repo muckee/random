@@ -1,14 +1,16 @@
 <?php
 
-namespace Savvot\Random;
+namespace Http5\Random;
+
+use Exception;
 
 /**
  * Class RandException
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
-class RandException extends \Exception
+class RandException extends Exception
 {
 
 }

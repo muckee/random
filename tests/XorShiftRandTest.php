@@ -1,17 +1,20 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
+
+use Http5\Random\XorShiftRand;
+use ReflectionClass;
 
 class XorShiftRandTest extends AbstractRandTest
 {
-    protected $randClass = 'Savvot\Random\XorShiftRand';
+    protected $randClass = XorShiftRand::class;
 
-    public function testZeroHashedSeed()
+    public function testZeroHashedSeed(): void
     {
-        /** @var \Savvot\Random\XorShiftRand $rnd */
+        /** @var XorShiftRand $rnd */
         $rnd = new $this->randClass;
 
-        $refClass = new \ReflectionClass($this->randClass);
+        $refClass = new ReflectionClass($this->randClass);
         $refProp = $refClass->getProperty('hashedSeed');
         $refProp->setAccessible(true);
         $refProp->setValue($rnd, str_repeat("\0", 16));

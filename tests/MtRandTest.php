@@ -1,16 +1,19 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
+
+use Http5\Random\AbstractRand;
+use Http5\Random\MtRand;
 
 class MtRandTest extends AbstractRandTest
 {
-    protected $randClass = 'Savvot\Random\MtRand';
+    protected $randClass = MtRand::class;
 
-    public function testCompatibility()
+    public function testCompatibility(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class(2015);
         mt_srand(2015);
 

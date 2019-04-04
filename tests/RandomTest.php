@@ -1,42 +1,46 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
 
-use Savvot\Random\Random;
+use Http5\Random\AbstractRand;
+use Http5\Random\HashRand;
+use Http5\Random\MtRand;
+use Http5\Random\RandException;
+use Http5\Random\Random;
+use Http5\Random\XorShiftRand;
+use PHPUnit\Framework\TestCase;
 
-class RandomTest extends \PHPUnit_Framework_TestCase
+class RandomTest extends TestCase
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         // Default generator and seed
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = Random::create();
-        $this->assertInstanceOf('\Savvot\Random\XorShiftRand', $rnd);
+        $this->assertInstanceOf(XorShiftRand::class, $rnd);
         $this->assertTrue(is_int($rnd->getSeed()));
 
         // Predefined seed and generator
         $rnd = Random::create('seeeedz', Random::MT);
-        $this->assertInstanceOf('\Savvot\Random\MtRand', $rnd);
+        $this->assertInstanceOf(MtRand::class, $rnd);
         $this->assertSame('seeeedz', $rnd->getSeed());
 
         $rnd = Random::create('some data', Random::HASH);
-        $this->assertInstanceOf('\Savvot\Random\HashRand', $rnd);
+        $this->assertInstanceOf(HashRand::class, $rnd);
         $this->assertSame('some data', $rnd->getSeed());
-
     }
 
-
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testCreateException()
+    public function testCreateException(): void
     {
         $rnd = Random::create(null, __CLASS__);
     }
 
-    public function testCreateFromState()
+    public function testCreateFromState(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = Random::create(null, Random::HASH);
         $rnd->random(); $rnd->random(); $rnd->random();
 
@@ -47,7 +51,7 @@ class RandomTest extends \PHPUnit_Framework_TestCase
         }
 
         $rnd = Random::createFromState($state);
-        $this->assertInstanceOf('\Savvot\Random\HashRand', $rnd);
+        $this->assertInstanceOf('\Http5\Random\HashRand', $rnd);
 
         $seq1test = [];
         for($i=0; $i<100; $i++) {
@@ -57,17 +61,17 @@ class RandomTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testBadStateException()
+    public function testBadStateException(): void
     {
         $rnd = Random::createFromState(['bad' => 'state']);
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testBadStateClassException()
+    public function testBadStateClassException(): void
     {
         $rnd = Random::createFromState(['class' => __CLASS__]);
     }

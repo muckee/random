@@ -1,8 +1,10 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
+
+use Http5\Random\HashRand;
 
 class HashRandTest extends AbstractRandTest
 {
-    protected $randClass = 'Savvot\Random\HashRand';
+    protected $randClass = HashRand::class;
 }

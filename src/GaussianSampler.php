@@ -1,13 +1,13 @@
 <?php
 
-namespace Savvot\Random;
+namespace Http5\Random;
 
 /**
  * Gaussian sampler for generating normally distributed random numbers.
  * Based on Ziggurat algorithm: https://en.wikipedia.org/wiki/Ziggurat_algorithm
  * PHP implementation based on: http://svn.code.sf.net/p/sharpneat/code/branches/V2/src/SharpNeatLib/Utility/ZigguratGaussianSampler.cs
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
 class GaussianSampler

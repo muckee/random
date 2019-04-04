@@ -1,25 +1,30 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
 
-use Savvot\Random\GaussianSampler;
-use Savvot\Random\Random;
+use Http5\Random\GaussianSampler;
+use Http5\Random\RandException;
+use Http5\Random\Random;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use TypeError;
 
-class GaussianSamplerTest extends \PHPUnit_Framework_TestCase
+class GaussianSamplerTest extends TestCase
 {
-
-    public function testConstructor()
+    /**
+     * @expectedException TypeError
+     * @throws RandException
+     */
+    public function testConstructor(): void
     {
         $sampler = new GaussianSampler(Random::create());
-        $this->assertInstanceOf('\Savvot\Random\GaussianSampler', $sampler);
+        $this->assertInstanceOf(GaussianSampler::class, $sampler);
 
         // Only AbstractRand children allowed
-        $error = PHP_MAJOR_VERSION == 7 ? '\TypeError' : '\PHPUnit_Framework_Error';
-        $this->setExpectedException($error);
-        $sampler = new GaussianSampler(new \stdClass);
+        $sampler = new GaussianSampler(new stdClass);
     }
 
-    public function testNextSample()
+    public function testNextSample(): void
     {
         $sampler = new GaussianSampler(Random::create());
 

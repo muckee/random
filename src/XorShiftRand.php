@@ -1,6 +1,6 @@
 <?php
 
-namespace Savvot\Random;
+namespace Http5\Random;
 
 /**
  * Fast and good quality random generator, based on XorShift+ algorithm with 128bit state
@@ -8,7 +8,7 @@ namespace Savvot\Random;
  * More info: https://en.wikipedia.org/wiki/Xorshift
  * Comparison of different xorshifts: http://xorshift.di.unimi.it/
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
 class XorShiftRand extends AbstractRand
@@ -18,27 +18,37 @@ class XorShiftRand extends AbstractRand
      */
     const INT_MAX = 0x7FFFFFFFFFFFFFFF;
 
-    /**
-     * @inheritdoc
-     */
+    const INT_MAX_32 = 0x7FFFFFFF;
+
     public function randomInt()
     {
-        $s1 = $this->state[0];
-        $s0 = $this->state[1];
-        $this->state[0] = $s0;
-        $s1 ^= ($s1 << 23) & self::INT_MAX;
+        if (PHP_INT_SIZE > 4) {
+            $s1 = $this->state[0];
+            $s0 = $this->state[1];
+            $this->state[0] = $s0;
+            $s1 ^= ($s1 << 23) & self::INT_MAX;
 
-        // s1 ^ s0 ^ (s1 >> 17) ^ (s0 >> 26)
-        // Original C algorithm operates uint64, but in PHP 64bit int is signed only.
-        // Also right shift in PHP is arithmetic, so we need to unset filled sign bits
-        $this->state[1] = $s1 ^ $s0 ^ (($s1 >> 17) & (self::INT_MAX >> 16)) ^ (($s0 >> 26) & (self::INT_MAX >> 25));
+            // s1 ^ s0 ^ (s1 >> 17) ^ (s0 >> 26)
+            // Original C algorithm operates uint64, but in PHP 64bit int is signed only.
+            // Also right shift in PHP is arithmetic, so we need to unset filled sign bits
+            $this->state[1] = $s1 ^ $s0 ^ (($s1 >> 17) & (self::INT_MAX >> 16)) ^ (($s0 >> 26) & (self::INT_MAX >> 25));
 
-        return ($this->state[1] + $s0) & self::INT_MAX;
+            return ($this->state[1] + $s0) & self::INT_MAX;
+        } else {
+            $s1 = $this->state[0];
+            $s0 = $this->state[1];
+            $this->state[0] = $s0;
+            $s1 ^= ($s1 << 23) & self::INT_MAX_32;
+
+            // s1 ^ s0 ^ (s1 >> 17) ^ (s0 >> 26)
+            // Original C algorithm operates uint64, but in PHP 64bit int is signed only.
+            // Also right shift in PHP is arithmetic, so we need to unset filled sign bits
+            $this->state[1] = $s1 ^ $s0 ^ (($s1 >> 17) & (self::INT_MAX >> 16)) ^ (($s0 >> 26) & (self::INT_MAX >> 25));
+
+            return ($this->state[1] + $s0) & self::INT_MAX_32;
+        }
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
         // Unfortunately P flag for 64bit is 5.6+

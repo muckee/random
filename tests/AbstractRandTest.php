@@ -1,21 +1,25 @@
 <?php
 
-namespace Savvot\Random\Tests;
+namespace Http5\Random\Tests;
+
+use Http5\Random\AbstractRand;
+use Http5\Random\RandException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Main test case
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
 
-abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractRandTest extends TestCase
 {
     protected $randClass;
 
-    public function testRandomInt()
+    public function testRandomInt(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         // Some naive tests
@@ -34,9 +38,9 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertUniform($data, $rnd::INT_MAX * 0.25, $rnd::INT_MAX * 0.02);
     }
 
-    public function testRandom()
+    public function testRandom(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         $this->assertSame(0, $rnd->random(0, 0));
@@ -64,9 +68,9 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testRandomFloat()
+    public function testRandomFloat(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         for ($i = 0; $i < 10; $i++) {
@@ -83,9 +87,9 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertUniform($data, 0.5, 0.02);
     }
 
-    public function testRandomBool()
+    public function testRandomBool(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $this->assertTrue(is_bool($rnd->randomBool()));
 
@@ -100,28 +104,28 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testRangeException()
+    public function testRangeException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $rnd->random(10, 1);
     }
 
-    public function testMaxException()
+    public function testMaxException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         if ($rnd::INT_MAX < PHP_INT_MAX) {
-            $this->setExpectedException('\Savvot\Random\RandException');
+            $this->expectException(RandException::class);
             $rnd->random(1, $rnd::INT_MAX + 1);
         }
     }
 
-    public function testGaussianRandom()
+    public function testGaussianRandom(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         $mean = $rnd->random(1, 10);
@@ -165,7 +169,7 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($p3 >= 98);
     }
 
-    public function testSeed()
+    public function testSeed(): void
     {
         $class = $this->randClass;
 
@@ -207,11 +211,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetSeed()
+    public function testGetSeed(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('seed1');
         $this->assertSame('seed1', $rnd->getSeed());
 
@@ -220,18 +224,18 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_int($rnd->getSeed()));
     }
 
-    public function testSetSeed()
+    public function testSetSeed(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('my cool SEED');
         $data = [];
         for ($i = 0; $i < 10; $i++) {
             $data[] = $rnd->randomInt();
         }
 
-        /** @var \Savvot\Random\AbstractRand $rnd2 */
+        /** @var AbstractRand $rnd2 */
         $rnd2 = new $class('new seed ftw');
         $data2 = [];
         for ($i = 0; $i < 10; $i++) {
@@ -253,11 +257,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data, $data3);
     }
 
-    public function testGetState()
+    public function testGetState(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd1 */
+        /** @var AbstractRand $rnd1 */
         $rnd1 = new $class('seed1');
         $state1 = $rnd1->getState();
         $this->assertArrayHasKey('class', $state1);
@@ -267,11 +271,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($state1['seed'], $rnd1->getSeed());
         $this->assertNotNull($state1['state']);
 
-        /** @var \Savvot\Random\AbstractRand $rnd2 */
+        /** @var AbstractRand $rnd2 */
         $rnd2 = new $class('seed1');
         $state2 = $rnd2->getState();
         $this->assertSame($state1, $state2);
-        /** @var \Savvot\Random\AbstractRand $rnd3 */
+        /** @var AbstractRand $rnd3 */
         $rnd3 = new $class('new seed');
         $state3 = $rnd3->getState();
         $this->assertNotSame($state1, $state3);
@@ -299,11 +303,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($state1, $state2);
     }
 
-    public function testSetState()
+    public function testSetState(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd1 */
+        /** @var AbstractRand $rnd1 */
         $rnd1 = new $class('seed 1');
         $state1 = $rnd1->getState();
         $n1 = $rnd1->random();
@@ -319,7 +323,7 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($n1, $rnd1->random());
         $this->assertSame($n2, $rnd1->random());
 
-        /** @var \Savvot\Random\AbstractRand $rnd2 */
+        /** @var AbstractRand $rnd2 */
         $rnd2 = new $class('just another seed in the wall');
         $rnd2->random();
         $rnd2->random();
@@ -332,11 +336,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($n4, $rnd2->random());
     }
 
-    public function testPushPopState()
+    public function testPushPopState(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('proseed');
 
         $rnd->random();
@@ -378,21 +382,21 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testInvalidStateException()
+    public function testInvalidStateException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $rnd->setState(['bad key' => 'useless value']);
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testWrongStateClassException()
+    public function testWrongStateClassException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $state = $rnd->getState();
         $state['class'] = self::class;
@@ -400,20 +404,20 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testPopStateException()
+    public function testPopStateException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $rnd->popState();
     }
 
-    public function testReset()
+    public function testReset(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('to seed or not to seed');
         $data = [];
         for ($i = 0; $i < 10; $i++) {
@@ -427,9 +431,12 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data, $data2);
     }
 
-    public function testRandomData()
+    /**
+     * @expectedException RandException
+     */
+    public function testRandomData(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         $data = $rnd->randomData(1);
@@ -449,13 +456,12 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
 
         // Exception test
-        $this->setExpectedException('\Savvot\Random\RandException');
         $rnd->randomData(0);
     }
 
-    public function testRandomString()
+    public function testRandomString(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         // Default characters list
@@ -492,9 +498,12 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testArrayRand()
+    /**
+     * @expectedException RandException
+     */
+    public function testArrayRand(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         $data = ['one', 'two', 'three', 'key' => 'four', 'five'];
@@ -510,16 +519,15 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
 
         // Exception test
-        $this->setExpectedException('\Savvot\Random\RandException');
         $data = [];
         $rnd->arrayRand($data);
     }
 
-    public function testArrayRandValue()
+    public function testArrayRandValue(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('my seed is bigger than yours');
 
         $data = ['one', 'two', 'three', 'key' => 'four', 'five'];
@@ -528,11 +536,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data[$key], $rnd->arrayRandValue($data));
     }
 
-    public function testArrayShuffle()
+    public function testArrayShuffle(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd1 */
+        /** @var AbstractRand $rnd1 */
         $rnd1 = new $class('enlarge your seed ' . time());
         $rnd2 = clone $rnd1;
 
@@ -572,11 +580,11 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testArrayShuffleAssoc()
+    public function testArrayShuffleAssoc(): void
     {
         $class = $this->randClass;
 
-        /** @var \Savvot\Random\AbstractRand $rnd1 */
+        /** @var AbstractRand $rnd1 */
         $rnd1 = new $class('fear of the seed ' . time());
         $rnd2 = clone $rnd1;
 
@@ -602,9 +610,9 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($state, $rnd1->getState());
     }
 
-    public function testArrayWeightRand()
+    public function testArrayWeightRand(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
 
         $data = ['one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'four2' => 4];
@@ -641,32 +649,32 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testNegativeWeightsException()
+    public function testNegativeWeightsException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $data = ['one' => -1, 'two' => 2, 'three' => 3];
         $rnd->arrayWeightRand($data);
     }
 
     /**
-     * @expectedException \Savvot\Random\RandException
+     * @expectedException RandException
      */
-    public function testAllZeroWeightsException()
+    public function testAllZeroWeightsException(): void
     {
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $this->randClass;
         $data = ['one' => 0, 'two' => 0, 'three' => 0];
         $rnd->arrayWeightRand($data);
     }
 
     // TODO: Uniform test
-    public function testArrayWeightShuffle()
+    public function testArrayWeightShuffle(): void
     {
         $class = $this->randClass;
-        /** @var \Savvot\Random\AbstractRand $rnd */
+        /** @var AbstractRand $rnd */
         $rnd = new $class('fear of the seed ' . mt_rand());
 
         $data = array_combine(range('A', 'Z'), range(1, 26));
@@ -676,7 +684,7 @@ abstract class AbstractRandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function assertUniform(array $data, $targetAvg, $delta)
+    public function assertUniform(array $data, $targetAvg, $delta): void
     {
         $avg = array_sum($data) / count($data);
         $this->assertTrue(abs($targetAvg - $avg) < $delta);

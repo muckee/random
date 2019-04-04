@@ -1,12 +1,12 @@
 <?php
 
-namespace Savvot\Random;
+namespace Http5\Random;
 
 /**
  * Proof-of-concept that md5 hash is uniformly distributed and can be used as PRNG source
  * Pretty fast, simple and straightforward generator
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
 class HashRand extends AbstractRand

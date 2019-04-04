@@ -1,11 +1,11 @@
 <?php
 
-namespace Savvot\Random;
+namespace Http5\Random;
 
 /**
  * Abstract base class with basic methods
  *
- * @package Savvot\Random
+ * @package Http5\Random
  * @author  SavvoT <savvot@ya.ru>
  */
 abstract class AbstractRand
