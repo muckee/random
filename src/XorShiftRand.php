@@ -33,7 +33,7 @@ class XorShiftRand extends AbstractRand
             // Also right shift in PHP is arithmetic, so we need to unset filled sign bits
             $this->state[1] = $s1 ^ $s0 ^ (($s1 >> 17) & (self::INT_MAX >> 16)) ^ (($s0 >> 26) & (self::INT_MAX >> 25));
 
-            return ($this->state[1] + $s0) & self::INT_MAX;
+            return (int) ($this->state[1] + $s0) & self::INT_MAX;
         } else {
             $s1 = $this->state[0];
             $s0 = $this->state[1];
@@ -45,7 +45,7 @@ class XorShiftRand extends AbstractRand
             // Also right shift in PHP is arithmetic, so we need to unset filled sign bits
             $this->state[1] = $s1 ^ $s0 ^ (($s1 >> 17) & (self::INT_MAX >> 16)) ^ (($s0 >> 26) & (self::INT_MAX >> 25));
 
-            return ($this->state[1] + $s0) & self::INT_MAX_32;
+            return (int) ($this->state[1] + $s0) & self::INT_MAX_32;
         }
     }
 
